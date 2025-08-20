@@ -1,0 +1,6 @@
+{
+  "name": "Copy of MCP Server Control",
+  "description": "A tool for managing an MCP (Meta-Control Protocol) Server, its AI agents, and overall system management through a Nuance Card-driven interface and a Gemini CLI.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
