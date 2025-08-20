@@ -6,6 +6,7 @@ import { getHistory, addHistoryItem, clearHistory } from './services/dbService';
 import AgentDetailCard from './components/AgentDetailCard';
 import CliSuggestions from './components/CliSuggestions';
 import FormattedDocument from './components/FormattedDocument';
+import ConfigurationCard from './components/ConfigurationCard';
 
 const ServerIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -22,12 +23,6 @@ const AgentIcon = () => (
 const TerminalIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
-  </svg>
-);
-
-const StatusIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 15l.813-.904m-2.828 3.903L5 15l1.187-.904m4.626 3.903L15 15l-1.187.904M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
@@ -85,6 +80,7 @@ const App: React.FC = () => {
   const [selectedAgent, setSelectedAgent] = useState<AIAgent | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isSuggestionsLoading, setIsSuggestionsLoading] = useState(false);
+  const [activeInfoTab, setActiveInfoTab] = useState<'status' | 'config'>('status');
   const cliEndRef = useRef<HTMLDivElement>(null);
   const cliInputRef = useRef<HTMLInputElement>(null);
 
@@ -131,7 +127,10 @@ const App: React.FC = () => {
       setIsCliLoading(true);
       try {
         await clearHistory();
-        setCliHistory([]);
+        const newHistoryItems = await Promise.all(
+            INITIAL_CLI_HISTORY_ITEMS.map(item => addHistoryItem(item))
+          );
+        setCliHistory(newHistoryItems);
       } catch (error) {
         console.error("Failed to clear history:", error);
         const errorItem = await addHistoryItem({ type: 'system', content: 'Error: Could not clear history.' });
@@ -274,11 +273,40 @@ const App: React.FC = () => {
             </form>
           </div>
           
-          {selectedAgent ? (
-            <AgentDetailCard agent={selectedAgent} onClose={() => setSelectedAgent(null)} />
-          ) : (
-            <FormattedDocument data={systemStatusReport} />
-          )}
+          <div className="row-span-1 flex flex-col min-h-0">
+            {selectedAgent ? (
+              <AgentDetailCard agent={selectedAgent} onClose={() => setSelectedAgent(null)} />
+            ) : (
+              <>
+                <div className="flex items-center">
+                  <button
+                      onClick={() => setActiveInfoTab('status')}
+                      className={`font-sans font-semibold text-sm py-2 px-5 rounded-t-lg transition-colors border-b-2 ${
+                        activeInfoTab === 'status'
+                          ? 'text-cyan-300 border-cyan-400'
+                          : 'text-gray-400 hover:text-white border-transparent'
+                      }`}
+                    >
+                      System Status
+                    </button>
+                    <button
+                      onClick={() => setActiveInfoTab('config')}
+                      className={`font-sans font-semibold text-sm py-2 px-5 rounded-t-lg transition-colors border-b-2 ${
+                        activeInfoTab === 'config'
+                          ? 'text-cyan-300 border-cyan-400'
+                          : 'text-gray-400 hover:text-white border-transparent'
+                      }`}
+                    >
+                      Environment
+                    </button>
+                </div>
+                <div className="flex-grow min-h-0">
+                    {activeInfoTab === 'status' && <FormattedDocument data={systemStatusReport} />}
+                    {activeInfoTab === 'config' && <ConfigurationCard />}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </main>
     </div>
