@@ -20,6 +20,7 @@ export interface AIAgent {
   persona: Persona;
   superpowers: string[];
   status: AgentStatus;
+  configuration: Record<string, string | number>;
 }
 
 export interface WorkflowStep {

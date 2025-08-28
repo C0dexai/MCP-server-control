@@ -1,4 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import type { AIAgent } from "../types";
 
 if (!process.env.API_KEY) {
   console.error("API_KEY environment variable not set. Gemini-powered features will be disabled.");
@@ -70,17 +71,25 @@ Current User Command:
   }
 }
 
-export async function getCommandSuggestions(history: string[]): Promise<string[]> {
+export async function getCommandSuggestions(history: string[], selectedAgent: AIAgent | null): Promise<string[]> {
   if (!ai) return [];
 
-  const suggestionPrompt = `Based on the recent MCP CLI interaction history, suggest three concise, relevant follow-up commands the user might want to execute next. The suggestions should be diverse and useful (e.g., list files, check status, view a specific config).
+  let suggestionPrompt = `Based on the recent MCP CLI interaction history, suggest three concise, relevant follow-up commands the user might want to execute next. The suggestions should be diverse and useful (e.g., list files, check status, view a specific config).`;
+
+  if (selectedAgent) {
+    suggestionPrompt += `
+
+The user has agent "${selectedAgent.name}" selected, whose role is "${selectedAgent.role}".
+Please include contextually relevant suggestions related to this agent. For example, you could suggest commands like 'mcp-status --agent ${selectedAgent.name}', 'cat /agents/${selectedAgent.name}.log', or a command related to their role like 'net-traffic --analyze' for a "Network Analyst".`;
+  }
+
+  suggestionPrompt += `
 
 Recent History:
 ${history.join('\n')}
 
 ---
-Analyze the last command and its response, then provide three logical next steps.
-`;
+Analyze the last command and its response, then provide three logical next steps based on the full context.`;
 
   try {
     const response = await ai.models.generateContent({

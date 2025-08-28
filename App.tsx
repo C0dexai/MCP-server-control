@@ -72,6 +72,20 @@ const systemStatusReport: FormattedDocumentData = {
   ]
 };
 
+const HELP_MESSAGE = `MCP Server Control - Available Commands:
+- help: Show this help message.
+- clear: Clear the terminal history.
+- ls [path]: List files in the current directory.
+- cat <file>: Display the content of a file.
+- touch <file>: Create an empty file.
+- mkdir <dir>: Create a new directory.
+- rm <file/dir>: Remove a file or directory.
+- mcp-status: Display the status of all connected agents.
+- mcp-connect <agent_id>: Attempt to connect to an agent.
+- mcp-disconnect <agent_id>: Disconnect an agent.
+- mcp-rules [--list|--add|--remove]: Manage connectivity rules.
+- echo <text>: Print text to the console.`;
+
 const App: React.FC = () => {
   const [cliHistory, setCliHistory] = useState<CliHistoryItem[]>([]);
   const [cliInput, setCliInput] = useState('');
@@ -146,6 +160,14 @@ const App: React.FC = () => {
     const commandItem = await addHistoryItem({ type: 'command', content: command });
     setCliHistory(prev => [...prev, commandItem]);
     
+    if (command.toLowerCase() === 'help') {
+        const responseItem = await addHistoryItem({ type: 'response', content: HELP_MESSAGE });
+        setCliHistory(prev => [...prev, responseItem]);
+        setIsCliLoading(false);
+        setTimeout(() => cliInputRef.current?.focus(), 0);
+        return;
+    }
+
     setIsSuggestionsLoading(true);
 
     try {
@@ -155,7 +177,7 @@ const App: React.FC = () => {
 
       const [result, newSuggestions] = await Promise.all([
         processCliCommand(command, promptHistory),
-        getCommandSuggestions(promptHistory),
+        getCommandSuggestions(promptHistory, selectedAgent),
       ]);
 
       const responseItem = await addHistoryItem({ type: 'response', content: result });

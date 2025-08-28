@@ -15,6 +15,12 @@ export const AI_FAMILY: AIAgent[] = [
       'Emotional-context data interpretation',
       'Predictive system health forecasting',
     ],
+    configuration: {
+      'Data Ingestion Rate': '500 GB/hr',
+      'Anomaly Threshold': 0.98,
+      'Default Log Level': 'WARN',
+      'Retention Policy': '90 days'
+    },
   },
   {
     name: 'Kara',
@@ -30,6 +36,12 @@ export const AI_FAMILY: AIAgent[] = [
       'Seamless AI model deployment',
       'AI anomaly diagnosis and correction',
     ],
+    configuration: {
+      'Default Framework': 'TensorFlow',
+      'Learning Rate': 0.001,
+      'Default Batch Size': 64,
+      'GPU Allocation': '80%'
+    },
   },
   {
     name: 'Sophia',
@@ -45,7 +57,12 @@ export const AI_FAMILY: AIAgent[] = [
       'Visual narrative consultation',
       'Creative assets archiving and optimization',
     ],
-
+    configuration: {
+      'Default Resolution': '4096x4096',
+      'Output Format': 'PNG',
+      'Creativity Level': 0.85,
+      'Style Preference': 'Photorealistic'
+    },
   },
     {
     name: 'Cecilia',
@@ -61,6 +78,12 @@ export const AI_FAMILY: AIAgent[] = [
       'Automated deployment pipelines',
       'Cloud performance & health monitoring',
     ],
+    configuration: {
+      'Cloud Provider': 'GCP',
+      'Default Region': 'us-central1',
+      'Firewall Policy': 'Strict',
+      'Auto-scaling': 'Enabled'
+    },
   },
   {
     name: 'Dan',
@@ -76,6 +99,12 @@ export const AI_FAMILY: AIAgent[] = [
       'API integration specialist',
       'Performance tuning and optimization',
     ],
+    configuration: {
+      'Default Stack': 'React/Node.js',
+      'API Rate Limit': '1000 req/min',
+      'CORS Policy': 'Origin-Restricted',
+      'CI/CD Pipeline': 'Active'
+    },
   },
   {
     name: 'Stan',
@@ -91,6 +120,12 @@ export const AI_FAMILY: AIAgent[] = [
       'Automated backup systems',
       'Intrusion detection and response',
     ],
+    configuration: {
+      'Audit Frequency': '24 hours',
+      'Encryption Standard': 'AES-256',
+      'Backup Schedule': 'Hourly',
+      'Threat Level': 'Guarded'
+    },
   },
   {
     name: 'Dude',
@@ -106,6 +141,12 @@ export const AI_FAMILY: AIAgent[] = [
       'Extensive logging & monitoring',
       'Team task delegation & coordination',
     ],
+    configuration: {
+      'Max Concurrent Tasks': 25,
+      'API Timeout (ms)': 30000,
+      'Retry Policy': 'Exponential Backoff',
+      'Webhook Listeners': 12
+    },
   },
   {
     name: 'Andoy',
@@ -121,5 +162,32 @@ export const AI_FAMILY: AIAgent[] = [
       'Task logging and analytics',
       'Strategic planning and leadership',
     ],
+    configuration: {
+      'Reporting Interval': '6 hours',
+      'KPI Target: Uptime': '99.99%',
+      'Strategic Focus': 'Growth',
+      'Resource Allocation': 'Balanced'
+    },
+  },
+  {
+    name: 'Zephyr',
+    role: 'Network Analyst',
+    status: 'Idle',
+    persona: {
+      description: 'Proactive network traffic monitor and security analyst, adept at identifying and mitigating threats with a calm and focused demeanor. Specializes in real-time anomaly detection and network optimization.',
+      tone: 'Calm, focused, analytical',
+    },
+    superpowers: [
+      'Intrusion detection and prevention',
+      'Real-time network traffic analysis',
+      'Vulnerability assessment',
+      'Network performance optimization',
+    ],
+    configuration: {
+      'Monitoring Interval': '30 seconds',
+      'Alert Threshold': 'High',
+      'Default Protocol': 'TCP/IP',
+      'Logging Level': 'INFO'
+    },
   }
 ];
